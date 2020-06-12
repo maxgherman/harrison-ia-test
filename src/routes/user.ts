@@ -40,8 +40,9 @@ const signup = async (user: MagicUser, userMetadata: MagicUserMetadata, done: Do
 
 /* Implement User Login */
 const login = async (user: MagicUser, done: DoneFunc) => {
-  /* Replay attack protection (https://go.magic.link/replay-attack) */
+  
   // TODO: extend 3rd party API to support typescript validation
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
   if (user.claim.iat <= user.lastLoginAt) {
     return done(null, false, {
@@ -96,7 +97,7 @@ router.get("/", async (req, res) => {
 
 /* Implement Logout Endpoint */
 router.post("/logout", async (req, res) => {
-  const user = req.user! as MagicUser
+  const user = req.user as MagicUser
   
   if (req.isAuthenticated()) {
     await magic.users.logoutByIssuer(user.issuer)
