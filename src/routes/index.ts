@@ -1,10 +1,19 @@
 import express from 'express'
+import { Controller } from './common'
 
-const MAGIC_PUBLISHABLE_KEY = process.env.MAGIC_PUBLISHABLE_KEY
+export const mainController = (): Controller => {
 
-export const router = express.Router()
+    const MAGIC_PUBLISHABLE_KEY = process.env.MAGIC_PUBLISHABLE_KEY
 
-// GET home page
-router.get("/", (_, res) => {
-  res.render("index", { title: "Magic Apple Store 🍎", MAGIC_PUBLISHABLE_KEY })
-})
+    const router = express.Router()
+
+    // GET home page
+    router.get("/", (_, res) => {
+        res.render("index", { title: "Magic Apple Store 🍎", MAGIC_PUBLISHABLE_KEY })
+    })
+
+    return {
+        path: '/',
+        router
+    }
+}

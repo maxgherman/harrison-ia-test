@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/build/app.js",
+            "program": "${workspaceFolder}/build/index.js",
             "runtimeArgs": ["-r", "dotenv/config"],
             "outFiles": [
                 "${workspaceFolder}/**/*.js"

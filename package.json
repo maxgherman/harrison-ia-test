@@ -7,8 +7,8 @@
     "lint": "eslint './src/**/*.ts' --max-warnings=0",
     "lint:fix": "npm run lint -- --fix",
     "build": "tsc",
-    "start:local": "node -r dotenv/config ./build/app.js",
-    "start": "nodemon ./build/app.js localhost 8080"
+    "start:local": "node -r dotenv/config ./build/index.js",
+    "start": "nodemon ./build/index.js localhost 8080"
   },
   "dependencies": {
     "@magic-sdk/admin": "^1.2.2",
