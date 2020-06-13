@@ -21,11 +21,13 @@
         let res = await fetch(`${serverUrl}user/`);
         if (res.status == 200) {
           let userData = await res.json();
+
           html = `
             <h1>Current user: ${userData.email}</h1>
             <button onclick="handleLogout()">Logout</button>
           `;
         }
+
         document.getElementById("app").innerHTML = html;
       };
 
@@ -34,6 +36,7 @@
         const email = new FormData(e.target).get("email");
         if (email) {
           const didToken = await magic.auth.loginWithMagicLink({ email });
+
           await fetch(`${serverUrl}user/login`, {
             headers: new Headers({
               Authorization: "Bearer " + didToken
@@ -47,14 +50,15 @@
       };
 
       const handleLogout = async () => {
-        await fetch(`${serverUrl}user/logout`, { method: "POST" });
+        await fetch(`${serverUrl}user/logout`, {
+            method: "POST",
+            headers: new Headers({
+              Authorization: "Bearer " + token
+            })
+        });
         render();
       };
 
-      const handleBuyApple = async () => {
-        await fetch(`${serverUrl}user/buy-apple`, { method: "POST" });
-        render();
-      };
     </script>
   </head>
   <body onload="render()">

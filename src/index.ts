@@ -1,11 +1,13 @@
 import { App } from './app'
 import { mainController } from './routes'
 import { userController } from './routes/user'
-import { userService } from './services'
+import { labelController } from './routes/labels'
+import { userService, labelService } from './services'
 
 const app = new App([
     mainController(),
-    userController(userService())
+    userController(userService()),
+    labelController(labelService())
 ])
 
 app.listen()

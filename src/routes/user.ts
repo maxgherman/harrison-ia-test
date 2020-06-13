@@ -21,14 +21,16 @@ export const userController = (userService: UserService): Controller => {
         if (!userResult.success) {
             throw 'Unauthorized login'
         } else {
-            return login(user, userResult.value, done)
+            login(user, userResult.value)
+            return done(null, user)
         }
     })
 
     /* Implement User Login */
-    const login = async (user: MagicUser, userEntity: User, done: DoneFunc) => {
-        userService.updateIssuer(user.issuer, userEntity.id)
-        return done(null, user)
+    const login = async (user: MagicUser, userEntity?: User) => {
+        if(userEntity) {
+            userService.updateIssuer(user.issuer, userEntity.id)
+        }
     }
 
     /* Attach middleware to login endpoint */
@@ -43,7 +45,6 @@ export const userController = (userService: UserService): Controller => {
     /* Session */
     passport.use(strategy)
 
-    /* Defines what data are stored in the user session */
     passport.serializeUser((user: MagicUser, done) => {
         done(null, user.issuer)
     })

@@ -3,3 +3,8 @@ export type User = {
     issuer: string
     email: string
 }
+
+export type Label = {
+    id: string
+    value: string
+}
