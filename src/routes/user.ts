@@ -1,57 +1,37 @@
 import express from 'express'
-import { Magic, MagicUserMetadata } from "@magic-sdk/admin"
-import passport from "passport"
-import * as passportStrategy from "passport-magic"
-import { MagicUser, DoneFunc} from "passport-magic"
+import { Magic } from '@magic-sdk/admin'
+import passport from 'passport'
+import * as passportStrategy from 'passport-magic'
+import { MagicUser, DoneFunc} from 'passport-magic'
+import { userService, User } from '../services'
+import { HttpException } from '../utils/errors'
 
 export const router = express.Router()
+
+const users = userService()
 const magic = new Magic(process.env.MAGIC_SECRET_KEY)
 
 const MagicStrategy = passportStrategy.Strategy
 
 const strategy = new MagicStrategy(async (user: MagicUser, done: DoneFunc) => {
   const userMetadata = await magic.users.getMetadataByIssuer(user.issuer)
-  // TODO check DB user
-  const existingUser = false
-  
-  if (!existingUser) {
-    /* Create new user if doesn't exist */
-    return signup(user, userMetadata, done)
+  const userResult = await users.getUserByEmail(userMetadata.email as string)
+
+  if (!userResult.success) {
+    throw 'Unauthorized login'
   } else {
-    /* Login user if otherwise */
-    return login(user, done)
+    return login(user, userResult.value, done)
   }
 })
 
 passport.use(strategy)
 
-/* Implement User Signup */
-const signup = async (user: MagicUser, userMetadata: MagicUserMetadata, done: DoneFunc) => {
-  const newUser = {
-    issuer: user.issuer,
-    email: userMetadata.email,
-    lastLoginAt: user.claim.iat
-  }
-  
-  //TODO: Insert user into DB
-
-  return done(null, newUser)
-}
-
 /* Implement User Login */
-const login = async (user: MagicUser, done: DoneFunc) => {
+const login = async (user: MagicUser, userEntity: User, done: DoneFunc) => {
   
-  // TODO: extend 3rd party API to support typescript validation
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
-  if (user.claim.iat <= user.lastLoginAt) {
-    return done(null, false, {
-      message: `Replay attack detected for user ${user.issuer}}.`
-    })
-  }
-  
-  //TODO: update user metadata
+  users.updateIssuer(user.issuer, userEntity.id)
 
+  //TODO: implement addition login checks
   return done(null, user)
 }
 
@@ -72,11 +52,13 @@ passport.serializeUser((user: MagicUser, done) => {
 })
 
 /* Populates user data in the req.user object */
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (id: string, done) => {
   try {
-    //TODO: Find user DB
-    const user = {}
-    done(null, user)
+    const userResult = await users.getUserByIssuer(id)
+    if(userResult.success) {
+      done(null, userResult.value)
+    } else 
+    done(new HttpException(401, 'Unauthorized login'), null)
   } catch (err) {
     done(err, null)
   }
