@@ -9,7 +9,7 @@ export const mainController = (): Controller => {
 
     // GET home page
     router.get("/", (_, res) => {
-        res.render("index", { title: "Magic Apple Store 🍎", MAGIC_PUBLISHABLE_KEY })
+        res.render("index", { title: "HARRISON-AI TEST ", MAGIC_PUBLISHABLE_KEY })
     })
 
     return {

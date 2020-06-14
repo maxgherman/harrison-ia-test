@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" href="styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/magic-sdk/dist/magic.js"></script>
     <script>
+      let token
       const magic = new Magic("<%= MAGIC_PUBLISHABLE_KEY %>");
       const serverUrl = window.location.href;
       const render = async () => {
@@ -26,6 +27,8 @@
             <h1>Current user: ${userData.email}</h1>
             <button onclick="handleLogout()">Logout</button>
 
+            <label>Upload image</label>
+
             <form  action='/images'
                 method='post'
                 encType="multipart/form-data">
@@ -36,16 +39,16 @@
                 <input type="hidden" name="labelIds[]" value="3" />
                 <input type='submit' value='Upload!' />
             </form>
+
+            <label>Check the console for all results</label>
           `;
         }
 
-
-        await fetch(`${serverUrl}images/1`, {
-            method: "GET",
-          })
-        .then(response => response.ok ? response.json() : response)
-        .then(console.log);
-
+        getLabels();
+        getLabel();
+        postLabel();
+        putLabel();
+        getImage();
 
         document.getElementById("app").innerHTML = html;
       };
@@ -71,13 +74,62 @@
 
       const handleLogout = async () => {
         await fetch(`${serverUrl}user/logout`, {
-            method: "POST",
-            headers: new Headers({
-              Authorization: "Bearer " + token
-            })
+            method: "POST"
         });
         render();
       };
+
+      const getLabels = async () => {
+        await fetch(`${serverUrl}labels/`, {
+            method: "GET",
+            headers: new Headers({
+              Authorization: "Bearer " + token
+            })
+        })
+        .then(response => response.ok ? response.json() : response)
+        .then(console.log);
+      };
+
+      const getLabel = async () => {
+        await fetch(`${serverUrl}labels/1`, {
+            method: "GET",
+            headers: new Headers({
+              Authorization: "Bearer " + token
+            }),
+        })
+        .then(response => response.ok ? response.json() : response)
+        .then(console.log);
+      };
+
+      const postLabel = async () => {
+        await fetch(`${serverUrl}labels/`, {
+            method: "POST",
+            headers: new Headers({
+                Authorization: "Bearer " + token,
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({ value: 'label' })  })
+        .then(response => console.log(response.status));
+      };
+
+      const putLabel = async () => {
+        await fetch(`${serverUrl}labels/8`, {
+            method: "PUT",
+            headers: new Headers({
+                Authorization: "Bearer " + token,
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({ value: `label - ${Math.random(10)}` })  })
+        .then(response => console.log(response.status));
+      };
+
+      const getImage = async () => {
+        await fetch(`${serverUrl}images/1`, {
+            method: "GET",
+          })
+        .then(response => response.ok ? response.json() : response)
+        .then(console.log);
+      }
 
     </script>
   </head>
