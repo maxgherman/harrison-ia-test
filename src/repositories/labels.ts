@@ -8,7 +8,7 @@ const pool = new Pool(databaseServer)
 export type LabelRepository = {
     getLabelById(id: string): Promise<Label>
     getLabels(): Promise<Label[]>
-    createLabel(value: string): Promise<{ id: number }>
+    createLabel(value: string): Promise<{ id: string }>
     updateLabel(id: string, value: string): Promise<void>
 }
 
@@ -22,7 +22,7 @@ export const labelRepository = (): LabelRepository => ({
         pool.query('SELECT id, value FROM labels')
         .then(({ rows }) => rows),
 
-    createLabel: (value: string): Promise<{ id: number }> =>
+    createLabel: (value: string): Promise<{ id: string }> =>
         pool.query('INSERT INTO labels (value) VALUES ($1) returning ID', [ value ])
         .then(({ rows }) => { console.log(rows); return rows[0] }),
 

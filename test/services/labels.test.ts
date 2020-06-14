@@ -1,5 +1,5 @@
 import tap from 'tap'
-import { labelService, LabelService} from '../../src/services'
+import { labelService } from '../../src/services'
 import { LabelRepository, Label } from '../../src/repositories'
 
 tap.test('label-service', (test) => {

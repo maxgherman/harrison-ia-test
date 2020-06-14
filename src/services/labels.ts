@@ -4,7 +4,7 @@ import { Label, Result } from './entities'
 export type LabelService = {
     getLabelById(id: string): Promise<Result<Label>>
     getLabels(): Promise<Label[]>
-    createLabel(value: string): Promise<{ id: number }>
+    createLabel(value: string): Promise<{ id: string }>
     updateLabel(id: string, value: string): Promise<Result<Label>>
 }
 
@@ -24,7 +24,7 @@ export const labelService = (repository: LabelRepository = labelRepository()): L
 
         getLabels: ():Promise<Label[]> => repository.getLabels(),
 
-        createLabel: (value: string): Promise<{ id: number }> =>
+        createLabel: (value: string): Promise<{ id: string }> =>
             repository.createLabel(value),
 
         updateLabel: (id: string, value: string): Promise<Result<Label>> =>

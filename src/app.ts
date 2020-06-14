@@ -5,6 +5,7 @@ import bodyParser from 'body-parser'
 import logger from 'morgan'
 import session from 'express-session'
 import passport from 'passport'
+import fileUpload from 'express-fileupload';
 import { environment, server } from './utils/environment'
 import { logErrors, errorMiddleware, authentication } from './utils/middleware'
 import { Controller } from './routes/common'
@@ -30,6 +31,8 @@ export class App {
         this.app.use(express.urlencoded({ extended: false }))
         this.app.use(cookieParser())
         this.app.use(bodyParser.json())
+        this.app.use(bodyParser.urlencoded({ extended: true }))
+        this.app.use(fileUpload())
         this.app.use(express.static(path.join(__dirname, "../public")))
         this.app.use(
             session({

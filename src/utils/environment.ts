@@ -67,3 +67,16 @@ export const databaseServer: Readonly<DataBaseServer> = {
         return parseInt(process.env.DBPORT as string)
     }
 }
+
+export const aws = {
+    get credentials(): { accessKey: string; secretAccessKey: string } {
+        return {
+            accessKey: process.env.AWS_ACCESS_KEY as string,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string
+        }
+    },
+
+    get s3(): string {
+        return process.env.AWS_S3 as string
+    }
+}

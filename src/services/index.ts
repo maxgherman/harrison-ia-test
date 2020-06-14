@@ -1,3 +1,5 @@
 export * from './entities'
 export * from './users'
 export * from './labels'
+export * from './file-storage'
+export * from './images'
