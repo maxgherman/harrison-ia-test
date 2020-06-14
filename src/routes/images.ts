@@ -32,6 +32,25 @@ export const imageController = (imageService: ImageService): Controller => {
             .end()
     })
 
+    router.get("/:id/contents", async (request, response) => {
+        const id = request.params.id
+        const data = await imageService.getImageData(id)
+
+        if(data.success) {
+            response.writeHead(200, {
+                'Content-Type': 'octet/stream',
+                'Content-disposition': `attachment;filename=${data.value?.fileName}`,
+            })
+
+            response.end(data.value?.contents)
+            return response
+        }
+
+        return response
+            .status(404)
+            .end()
+    })
+
     router.post('/', async (request, response) => {
 
         if (!request.files || Object.keys(request.files).length !== 1) {

@@ -11,11 +11,11 @@ tap.test('label-service', (test) => {
     const getMockRepository = (): LabelRepository => ({
         getLabelById: () => Promise.resolve(mockLabel),
         getLabels: () => Promise.resolve([]),
-        createLabel: () => Promise.resolve({ id: 1 }),
+        createLabel: () => Promise.resolve({ id: '1' }),
         updateLabel: () => Promise.resolve()
     })
 
-    tap.test('getLabelById should return user', (test) => {
+    tap.test('getLabelById should return label', (test) => {
 
         const mockRepository = getMockRepository()
         const service = labelService(mockRepository)
@@ -61,7 +61,7 @@ tap.test('label-service', (test) => {
     tap.test('createLabel should return label id', (test) => {
 
         const mockRepository = getMockRepository()
-        mockRepository.createLabel = () => Promise.resolve({ id: 1 })
+        mockRepository.createLabel = () => Promise.resolve({ id: '1' })
 
         const service = labelService(mockRepository)
 
