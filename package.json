@@ -7,8 +7,7 @@
     "lint": "eslint './src/**/*.ts' --max-warnings=0",
     "lint:fix": "npm run lint -- --fix",
     "build": "tsc",
-    "start:local": "node -r dotenv/config ./build/index.js",
-    "start": "nodemon ./build/index.js localhost 8080",
+    "start": "nodemon -r dotenv/config ./build/index.js",
     "test": "tap --no-coverage test/**/*.test.ts"
   },
   "dependencies": {
