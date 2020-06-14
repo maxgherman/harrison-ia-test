@@ -5,9 +5,15 @@ import bodyParser from 'body-parser'
 import logger from 'morgan'
 import session from 'express-session'
 import passport from 'passport'
-import fileUpload from 'express-fileupload';
+import fileUpload from 'express-fileupload'
 import { environment, server } from './utils/environment'
-import { logErrors, errorMiddleware, authentication } from './utils/middleware'
+import {
+    logErrors,
+    errorMiddleware,
+    authentication,
+    userDetector,
+    piiDetector
+} from './utils/middleware'
 import { Controller } from './routes/common'
 
 export class App {
@@ -49,6 +55,8 @@ export class App {
         this.app.use(passport.initialize())
         this.app.use(passport.session())
         this.app.use(authentication)
+        this.app.use(userDetector)
+        this.app.use(piiDetector)
         this.app.use(logErrors)
         this.app.use(errorMiddleware)
     }
