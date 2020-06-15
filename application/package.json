@@ -2,7 +2,7 @@
   "name": "magic-apple-store-nodejs",
   "version": "1.0.0",
   "description": "",
-  "main": "routes/user.js",
+  "main": "build/index.js",
   "scripts": {
     "lint": "eslint './src/**/*.ts' --max-warnings=0",
     "lint:fix": "npm run lint -- --fix",

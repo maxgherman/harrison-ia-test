@@ -86,7 +86,8 @@ export const imageController = (imageService: ImageService): Controller => {
         )
 
         return response
-            .status(200)
+            .status(201)
+            .location(`/images/${data.id}`)
             .json(data)
             .end()
     })
