@@ -1,9 +1,5 @@
-import pg from 'pg'
-import { databaseServer } from '../utils/environment'
+import { pool } from './pool'
 import { Label } from './entities'
-
-const Pool = pg.Pool
-const pool = new Pool(databaseServer)
 
 export type LabelRepository = {
     getLabelById(id: string): Promise<Label>

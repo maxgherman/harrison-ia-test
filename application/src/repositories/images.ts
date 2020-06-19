@@ -1,9 +1,5 @@
-import pg from 'pg'
-import { databaseServer } from '../utils/environment'
+import { pool } from './pool'
 import { Image, Label } from './entities'
-
-const Pool = pg.Pool
-const pool = new Pool(databaseServer)
 
 export type ImageRepository = {
     getImageById(id: string): Promise<Image | null>
@@ -85,29 +81,51 @@ export const imageRepository = (): ImageRepository => ({
             return [...result.values()]
         }),
 
-        createImage: (
+        createImage: async (
             fileName: string,
             status: string,
-            labelsIds: string[]): Promise<{ id: number }> =>
-                pool.query('INSERT INTO images (file_name, status) VALUES ($1, $2) returning ID', [fileName, status])
-                .then(({ rows }) => {
-                    const { id } = rows[0]
-                    const items = labelsIds.map(labelId =>
-                        pool.query('INSERT INTO image_label VALUES ($1, $2)', [id, labelId]))
+            labelsIds: string[]): Promise<{ id: number }> => {
 
-                    return Promise.all(items)
-                    .then(() => ({ id }))
-                }),
+            const client = await pool.connect()
 
-
-        updateImage: (id: string, status: string, labelsIds: string[]): Promise<unknown> => {
-            return pool.query('UPDATE images SET status=$1 WHERE ID=$2', [status, id])
-            .then(() => pool.query('DELETE FROM image_label WHERE image_id=$1'))
-            .then(() => {
+            try {
+                await client.query('BEGIN')
+                const { rows } = await client.query('INSERT INTO images (file_name, status) VALUES ($1, $2) returning ID', [fileName, status])
+                const { id } = rows[0]
                 const items = labelsIds.map(labelId =>
-                    pool.query('INSERT INTO image_label VALUES ($1, $2)', [id, labelId]))
+                    client.query('INSERT INTO image_label VALUES ($1, $2)', [id, labelId]))
+                await Promise.all(items)
 
-                return Promise.all(items)
-            })
+                await client.query('COMMIT')
+                return { id }
+            } catch (e) {
+                await client.query('ROLLBACK')
+                throw e
+            } finally {
+                client.release()
+            }
+        },
+
+        updateImage: async (id: string, status: string, labelsIds: string[]): Promise<unknown> => {
+
+            const client = await pool.connect()
+
+            try {
+                await client.query('BEGIN')
+                await client.query('UPDATE images SET status=$1 WHERE ID=$2', [status, id])
+                await client.query('DELETE FROM image_label WHERE image_id=$1')
+
+                const items = labelsIds.map(labelId =>
+                    client.query('INSERT INTO image_label VALUES ($1, $2)', [id, labelId]))
+                await Promise.all(items)
+
+                await client.query('COMMIT')
+                return { id }
+            } catch (e) {
+                await client.query('ROLLBACK')
+                throw e
+            } finally {
+                client.release()
+            }
         }
 })
