@@ -32,7 +32,7 @@ The project represents a collection of APIs for images and labels management. AP
 - [x] API architecture - [REST](https://en.wikipedia.org/wiki/Representational_state_transfer)
 - [x] Application design
     - API interface - [Model-View-Controller](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller)
-    - Business logic - simplified [Onion Architecture](https://www.thinktocode.com/2018/08/16/onion-architecture/)
+    - Business logic - simplified Layered Architecture
         - [Service layer pattern](https://en.wikipedia.org/wiki/Service_layer_pattern)
         - [Repository pattern](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design#the-repository-pattern)
 - [x] Authentication
