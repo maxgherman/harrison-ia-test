@@ -42,7 +42,7 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
     "nodemon": "2.0.20",
-    "tap": "^14.10.7",
+    "tap": "^18.4.2",
     "typescript": "^3.9.5"
   },
   "keywords": []
