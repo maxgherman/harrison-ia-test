@@ -27,7 +27,7 @@
     "morgan": "~1.10.0",
     "passport": "0.6.0",
     "passport-magic": "^1.0.0",
-    "pg": "^8.2.1",
+    "pg": "^8.14.0",
     "uuid": "^8.1.0",
     "winston": "^3.2.1"
   },
@@ -41,7 +41,7 @@
     "@typescript-eslint/parser": "^3.2.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.2.0",
-    "nodemon": "2.0.20",
+    "nodemon": "3.1.9",
     "tap": "^18.4.2",
     "typescript": "^3.9.5"
   },
