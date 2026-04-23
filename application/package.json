@@ -28,7 +28,7 @@
     "passport": "0.6.0",
     "passport-magic": "^1.0.0",
     "pg": "^8.14.0",
-    "uuid": "^8.1.0",
+    "uuid": "^14.0.0",
     "winston": "^3.2.1"
   },
   "devDependencies": {
